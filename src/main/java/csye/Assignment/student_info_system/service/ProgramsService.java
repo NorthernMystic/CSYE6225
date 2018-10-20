@@ -43,9 +43,10 @@ public class ProgramsService {
 	}
 	
 	// Deleting a Program
-	public Program deleteProgram(Long ProgramId) {
-		Program deletedProgramDetails = program_Map.get(ProgramId);
-		program_Map.remove(ProgramId);
+	public Program deleteProgram(Long programId) {
+		if (!program_Map.containsKey(programId)) return null;
+		Program deletedProgramDetails = program_Map.get(programId);
+		program_Map.remove(programId);
 		return deletedProgramDetails;
 	}
 	

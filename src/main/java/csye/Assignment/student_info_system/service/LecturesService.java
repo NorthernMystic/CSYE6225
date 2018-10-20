@@ -44,6 +44,7 @@ public class LecturesService {
 	
 	// Deleting a Lecture
 	public Lecture deleteLecture(Long LectureId) {
+		if (!Lecture_Map.containsKey(LectureId)) return null;
 		Lecture deletedLectureDetails = Lecture_Map.get(LectureId);
 		Lecture_Map.remove(LectureId);
 		return deletedLectureDetails;

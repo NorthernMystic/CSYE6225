@@ -43,9 +43,10 @@ public class CoursesService {
 	}
 	
 	// Deleting a Course
-	public Course deleteCourse(Long CourseId) {
-		Course deletedCourseDetails = course_Map.get(CourseId);
-		course_Map.remove(CourseId);
+	public Course deleteCourse(Long courseId) {
+		if (!course_Map.containsKey(courseId)) return null;
+		Course deletedCourseDetails = course_Map.get(courseId);
+		course_Map.remove(courseId);
 		return deletedCourseDetails;
 	}
 	

@@ -47,6 +47,7 @@ public class ProfessorsService {
 	
 	// Deleting a professor
 	public Professor deleteProfessor(Long profId) {
+		if (!prof_Map.containsKey(profId)) return null;
 		Professor deletedProfDetails = prof_Map.get(profId);
 		prof_Map.remove(profId);
 		return deletedProfDetails;

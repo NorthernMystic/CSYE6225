@@ -45,6 +45,7 @@ public class StudentsService {
 	
 	// Deleting a student
 	public Student deleteStudent(Long studentId) {
+		if (!student_Map.containsKey(studentId)) return null;
 		Student deletedstudentDetails = student_Map.get(studentId);
 		student_Map.remove(studentId);
 		return deletedstudentDetails;

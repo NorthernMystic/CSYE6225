@@ -14,6 +14,14 @@ public class Student {
 		
 	}
 	
+	public Student(String firstName, String lastName, Long id, List<String> enrolledClass) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.id = id;
+		this.image = null;
+		this.enrolledClass = enrolledClass;
+	}
+	
 	public Student(String firstName, String lastName, Long id, Image image, List<String> enrolledClass) {
 		this.firstName = firstName;
 		this.lastName = lastName;

@@ -14,5 +14,9 @@ The link of working notes can be found here [link](https://github.com/NorthernMy
 
 
 
+---
 
+###Test
+
+To test the APIs deployed on the Elastic Beanstalk, you can follow the provided postman request [hisotry](https://www.getpostman.com/collections/646c1df4346c3dab4b9f).
 
