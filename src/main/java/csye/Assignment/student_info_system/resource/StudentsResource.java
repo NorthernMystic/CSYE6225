@@ -14,29 +14,19 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import csye.Assignment.student_info_system.datamodel.Student;
-import csye.Assignment.student_info_system.service.StudentsService;
-
-
+import csye.Assignment.student_info_system.service.GenericServices;
 
 // .. /webapi/students
 // webapi is defined in the src/main/webapp/web-inf/web.xml -> url pattern
 @Path("students")
 public class StudentsResource {
-
-	StudentsService studentService = new StudentsService();
-	
-	
+		
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Student> getAllStudentsByProgram() {
+		GenericServices service = GenericServices.getServiceInstance();
 		
-		try {
-			return studentService.getAllStudents();
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
-		
-		return null;
+		return service.getAllItems(Student.class);
 	}
 	
 	// ... webapi/student/1 
@@ -44,22 +34,36 @@ public class StudentsResource {
 	@Path("/{studentId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Student getStudent(@PathParam("studentId") long studentId) {
-		return studentService.getStudent(studentId);
+		GenericServices service = GenericServices.getServiceInstance();
+		
+		return service.getItem(Student.class, studentId);
 	}
 	
 	@DELETE
 	@Path("/{studentId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Student deleteStudent(@PathParam("studentId") long studentId) {
-		return studentService.deleteStudent(studentId);
+		GenericServices service = GenericServices.getServiceInstance();
+		
+		return service.deleteItem(Student.class, studentId);
 	}
 	
+
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Student addstudent(Student student) {
-			return studentService.addStudent(student);
+		GenericServices service = GenericServices.getServiceInstance();
+		if (service.getItem(Student.class, student.getId()) != null) {
+			System.out.println("the student with this id is exist");
+			return null;
+		}
+		
+		service.addOrUpdateItem(student);
+		return student;
 	}
+	
+	
 	
 	@PUT
 	@Path("/{studentId}")
@@ -67,7 +71,16 @@ public class StudentsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Student updatestudent(@PathParam("studentId") long studentId, 
 			Student student) {
-		return studentService.updateStudentInformation(studentId, student);
+		GenericServices service = GenericServices.getServiceInstance();
+		if (studentId != student.getId()) {
+			System.out.println("the student Id you input is different from the id in your student object");
+			return null;
+		}
+		
+		//if the studentId is not exist in the database, it will be created
+		//if the studentId is already existed in the database, it will be overwrited
+		service.addOrUpdateItem(student);
+		return student;
 	}
 	
  }

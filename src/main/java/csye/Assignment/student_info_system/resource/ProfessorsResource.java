@@ -15,7 +15,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import csye.Assignment.student_info_system.datamodel.Professor;
-import csye.Assignment.student_info_system.service.ProfessorsService;
+import csye.Assignment.student_info_system.service.GenericServices;
 
 
 
@@ -23,8 +23,6 @@ import csye.Assignment.student_info_system.service.ProfessorsService;
 // webapi is defined in the src/main/webapp/web-inf/web.xml -> url pattern
 @Path("professors")
 public class ProfessorsResource {
-
-	ProfessorsService profService = new ProfessorsService();
 	
 	
 	@GET
@@ -33,10 +31,9 @@ public class ProfessorsResource {
 			@QueryParam("program") String program) {
 		
 		try {
-			if (program == null) {
-				return profService.getAllProfessors();
-			}
-			return profService.getProfessorsByProgram(program);
+			GenericServices service = GenericServices.getServiceInstance();
+			
+			return service.getAllItems(Professor.class);
 
 		} catch (Exception e) {
 		    e.printStackTrace();
@@ -53,21 +50,32 @@ public class ProfessorsResource {
 	@Path("/{professorId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Professor getProfessor(@PathParam("professorId") long profId) {
-		return profService.getProfessor(profId);
+		GenericServices service = GenericServices.getServiceInstance();
+		
+		return service.getItem(Professor.class, profId);
 	}
 	
 	@DELETE
 	@Path("/{professorId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Professor deleteProfessor(@PathParam("professorId") long profId) {
-		return profService.deleteProfessor(profId);
+		GenericServices service = GenericServices.getServiceInstance();
+		
+		return service.deleteItem(Professor.class, profId);
 	}
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Professor addProfessor(Professor prof) {
-			return profService.addProfessor(prof);
+		GenericServices service = GenericServices.getServiceInstance();
+		if (service.getItem(Professor.class, prof.getId()) != null) {
+			System.out.println("the professor with this id is exist");
+			return null;
+		}
+		
+		service.addOrUpdateItem(prof);
+		return prof;
 	}
 	
 	@PUT
@@ -76,10 +84,17 @@ public class ProfessorsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Professor updateProfessor(@PathParam("professorId") long profId, 
 			Professor prof) {
-		return profService.updateProfessorInformation(profId, prof);
+		GenericServices service = GenericServices.getServiceInstance();
+		if (profId != prof.getId()) {
+			System.out.println("the PROFESSOR Id you input is different from the id in your professor object");
+			return null;
+		}
+		
+		//if the studentId is not exist in the database, it will be created
+		//if the studentId is already existed in the database, it will be overwrited
+		service.addOrUpdateItem(prof);
+		return prof;
 	}
 	
-	public void addProfessor(String name, String department) {
-		profService.addProfessor(name, department);
-	}
+
  }

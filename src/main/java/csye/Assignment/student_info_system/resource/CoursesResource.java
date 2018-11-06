@@ -14,59 +14,72 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import csye.Assignment.student_info_system.datamodel.Course;
-import csye.Assignment.student_info_system.service.CoursesService;
-
-
+import csye.Assignment.student_info_system.service.GenericServices;
 
 // .. /webapi/Courses
-// webapi is defined in the src/main/webapp/web-inf/web.xml -> url pattern
-@Path("Courses")
+@Path("courses")
 public class CoursesResource {
-
-	CoursesService CourseService = new CoursesService();
-	
-	
+		
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Course> getAllCoursesByProgram() {
+		GenericServices service = GenericServices.getServiceInstance();
 		
-		try {
-			return CourseService.getAllCourses();
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
-		
-		return null;
+		return service.getAllItems(Course.class);
 	}
 	
+	// ... webapi/Course/1 
 	@GET
-	@Path("/{CourseId}")
+	@Path("/{courseId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Course getCourse(@PathParam("CourseId") long CourseId) {
-		return CourseService.getCourse(CourseId);
+	public Course getCourse(@PathParam("courseId") long courseId) {
+		GenericServices service = GenericServices.getServiceInstance();
+		
+		return service.getItem(Course.class, courseId);
 	}
 	
 	@DELETE
-	@Path("/{CourseId}")
+	@Path("/{courseId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Course deleteCourse(@PathParam("CourseId") long CourseId) {
-		return CourseService.deleteCourse(CourseId);
+	public Course deleteCourse(@PathParam("courseId") long courseId) {
+		GenericServices service = GenericServices.getServiceInstance();
+		
+		return service.deleteItem(Course.class, courseId);
 	}
 	
+
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Course addCourse(Course Course) {
-			return CourseService.addCourse(Course);
+	public Course addCourse(Course course) {
+		GenericServices service = GenericServices.getServiceInstance();
+		if (service.getItem(Course.class, course.getId()) != null) {
+			System.out.println("the course with this id is exist");
+			return null;
+		}
+		
+		service.addOrUpdateItem(course);
+		return course;
 	}
 	
+	
+	
 	@PUT
-	@Path("/{CourseId}")
+	@Path("/{courseId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Course updateCourse(@PathParam("CourseId") long CourseId, 
-			Course Course) {
-		return CourseService.updateCourseInformation(CourseId, Course);
+	public Course updateCourse(@PathParam("courseId") long courseId, 
+			Course course) {
+		GenericServices service = GenericServices.getServiceInstance();
+		if (courseId != course.getId()) {
+			System.out.println("the course Id you input is different from the id in your course object");
+			return null;
+		}
+		
+		//if the CourseId is not exist in the database, it will be created
+		//if the CourseId is already existed in the database, it will be overwrited
+		service.addOrUpdateItem(course);
+		return course;
 	}
 	
  }
