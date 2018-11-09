@@ -20,7 +20,7 @@ import csye.Assignment.student_info_system.service.GenericServices;
 // webapi is defined in the src/main/webapp/web-inf/web.xml -> url pattern
 @Path("students")
 public class StudentsResource {
-		
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Student> getAllStudentsByProgram() {
@@ -33,19 +33,20 @@ public class StudentsResource {
 	@GET
 	@Path("/{studentId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Student getStudent(@PathParam("studentId") long studentId) {
+	public Student getStudent(@PathParam("studentId") String studentId) {
 		GenericServices service = GenericServices.getServiceInstance();
 		
-		return service.getItem(Student.class, studentId);
+		return service.getItem(Student.class, studentId, "StudentId");
 	}
 	
 	@DELETE
 	@Path("/{studentId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Student deleteStudent(@PathParam("studentId") long studentId) {
+	public Student deleteStudent(@PathParam("studentId") String studentId) {
 		GenericServices service = GenericServices.getServiceInstance();
-		
-		return service.deleteItem(Student.class, studentId);
+		Student student = service.getItem(Student.class, studentId, "StudentId");
+		if (student == null) return null;
+		return service.deleteItem(student);
 	}
 	
 
@@ -54,10 +55,10 @@ public class StudentsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Student addstudent(Student student) {
 		GenericServices service = GenericServices.getServiceInstance();
-		if (service.getItem(Student.class, student.getId()) != null) {
-			System.out.println("the student with this id is exist");
-			return null;
-		}
+//		if (service.getItem(Student.class, student.getId()) != null) {
+//			System.out.println("the student with this id is exist");
+//			return null;
+//		}
 		
 		service.addOrUpdateItem(student);
 		return student;
@@ -69,10 +70,10 @@ public class StudentsResource {
 	@Path("/{studentId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Student updatestudent(@PathParam("studentId") long studentId, 
+	public Student updatestudent(@PathParam("studentId") String id, 
 			Student student) {
 		GenericServices service = GenericServices.getServiceInstance();
-		if (studentId != student.getId()) {
+		if (!id.equals(student.getId())) {
 			System.out.println("the student Id you input is different from the id in your student object");
 			return null;
 		}
