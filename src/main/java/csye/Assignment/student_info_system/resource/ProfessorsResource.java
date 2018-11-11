@@ -49,19 +49,21 @@ public class ProfessorsResource {
 	@GET
 	@Path("/{professorId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Professor getProfessor(@PathParam("professorId") long profId) {
+	public Professor getProfessor(@PathParam("professorId") String profId) {
 		GenericServices service = GenericServices.getServiceInstance();
 		
-		return service.getItem(Professor.class, profId);
+		return service.getItem(Professor.class, profId, "ProfessorId");
 	}
 	
 	@DELETE
 	@Path("/{professorId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Professor deleteProfessor(@PathParam("professorId") long profId) {
+	public Professor deleteProfessor(@PathParam("professorId") String profId) {
 		GenericServices service = GenericServices.getServiceInstance();
 		
-		return service.deleteItem(Professor.class, profId);
+		Professor prof = service.getItem(Professor.class, profId, "ProfessorId");
+		if (prof == null) return null;
+		return service.deleteItem(prof);
 	}
 	
 	@POST
@@ -69,10 +71,6 @@ public class ProfessorsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Professor addProfessor(Professor prof) {
 		GenericServices service = GenericServices.getServiceInstance();
-		if (service.getItem(Professor.class, prof.getId()) != null) {
-			System.out.println("the professor with this id is exist");
-			return null;
-		}
 		
 		service.addOrUpdateItem(prof);
 		return prof;
@@ -82,16 +80,15 @@ public class ProfessorsResource {
 	@Path("/{professorId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Professor updateProfessor(@PathParam("professorId") long profId, 
+	public Professor updateProfessor(@PathParam("professorId") String profId, 
 			Professor prof) {
 		GenericServices service = GenericServices.getServiceInstance();
-		if (profId != prof.getId()) {
-			System.out.println("the PROFESSOR Id you input is different from the id in your professor object");
-			return null;
-		}
+		Professor profToRemove = service.getItem(Professor.class, profId, "ProfessorId");
+		service.deleteItem(profToRemove);
+
+		//if the profId is not exist in the database, it will be created
+		//if the profId is already existed in the database, it will be overwrited
 		
-		//if the studentId is not exist in the database, it will be created
-		//if the studentId is already existed in the database, it will be overwrited
 		service.addOrUpdateItem(prof);
 		return prof;
 	}

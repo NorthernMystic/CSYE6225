@@ -22,8 +22,7 @@ public class DynamoDBConnector{
 	
 	public DynamoDBConnector() {
 		try {
-			BasicAWSCredentials awsCreds = new BasicAWSCredentials(""
-					, "");
+			
 			
 			//build the instance of client connect to dynamoDB 
 			dynamoDB = AmazonDynamoDBClientBuilder

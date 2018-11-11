@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import csye.Assignment.student_info_system.datamodel.Announcement;
+import csye.Assignment.student_info_system.service.AnnouncementService;
 import csye.Assignment.student_info_system.service.GenericServices;
 
 
@@ -30,23 +31,26 @@ public class AnnouncementsResource {
 		return service.getAllItems(Announcement.class);
 	}
 	
-	// ... webapi/Announcement/1 
+	// ... webapi/Announcement/1_1	
 	@GET
-	@Path("/{announcementId}")
+	@Path("/{boardId}_{announcementId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Announcement getAnnouncement(@PathParam("announcementId") long announcementId) {
-		GenericServices service = GenericServices.getServiceInstance();
+	public Announcement getAnnouncement(@PathParam("boardId") String boardId, @PathParam("announcementId") String announcementId) {
+		AnnouncementService Aservice = AnnouncementService.getServiceInstance();
 		
-		return service.getItem(Announcement.class, announcementId);
+		return Aservice.getAnnouncement(boardId, announcementId);
 	}
 	
 	@DELETE
-	@Path("/{announcementId}")
+	@Path("/{boardId}_{announcementId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Announcement deleteAnnouncement(@PathParam("AnnouncementId") long announcementId) {
+	public Announcement deleteAnnouncement(@PathParam("boardId") String boardId, @PathParam("announcementId") String announcementId) {
 		GenericServices service = GenericServices.getServiceInstance();
+		AnnouncementService Aservice = AnnouncementService.getServiceInstance();
 		
-		return service.deleteItem(Announcement.class, announcementId);
+		Announcement announcement = Aservice.getAnnouncement(boardId, announcementId);
+		if (announcement == null) return null;
+		return service.deleteItem(announcement);
 	}
 	
 
@@ -55,10 +59,6 @@ public class AnnouncementsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Announcement addAnnouncement(Announcement announcement) {
 		GenericServices service = GenericServices.getServiceInstance();
-		if (service.getItem(Announcement.class, announcement.getId()) != null) {
-			System.out.println("the announcement with this id is exist");
-			return null;
-		}
 		
 		service.addOrUpdateItem(announcement);
 		return announcement;
@@ -67,19 +67,16 @@ public class AnnouncementsResource {
 	
 	
 	@PUT
-	@Path("/{announcementId}")
+	@Path("/{boardId}_{announcementId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Announcement updateAnnouncement(@PathParam("AnnouncementId") long announcementId, 
+	public Announcement updateAnnouncement(@PathParam("boardId") String boardId, @PathParam("announcementId") String announcementId, 
 			Announcement announcement) {
 		GenericServices service = GenericServices.getServiceInstance();
-		if (announcementId != announcement.getId()) {
-			System.out.println("the announcement Id you input is different from the id in your Announcement object");
-			return null;
-		}
+		AnnouncementService Aservice = AnnouncementService.getServiceInstance();
 		
-		//if the AnnouncementId is not exist in the database, it will be created
-		//if the AnnouncementId is already existed in the database, it will be overwrited
+		Announcement announcementToRemove = Aservice.getAnnouncement(boardId, announcementId);
+		service.deleteItem(announcementToRemove);
 		service.addOrUpdateItem(announcement);
 		return announcement;
 	}

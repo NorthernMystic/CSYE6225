@@ -55,10 +55,6 @@ public class StudentsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Student addstudent(Student student) {
 		GenericServices service = GenericServices.getServiceInstance();
-//		if (service.getItem(Student.class, student.getId()) != null) {
-//			System.out.println("the student with this id is exist");
-//			return null;
-//		}
 		
 		service.addOrUpdateItem(student);
 		return student;
@@ -70,14 +66,11 @@ public class StudentsResource {
 	@Path("/{studentId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Student updatestudent(@PathParam("studentId") String id, 
+	public Student updatestudent(@PathParam("studentId") String studentId, 
 			Student student) {
 		GenericServices service = GenericServices.getServiceInstance();
-		if (!id.equals(student.getId())) {
-			System.out.println("the student Id you input is different from the id in your student object");
-			return null;
-		}
-		
+		Student studentToRemove = service.getItem(Student.class, studentId, "StudentId");
+		service.deleteItem(studentToRemove);
 		//if the studentId is not exist in the database, it will be created
 		//if the studentId is already existed in the database, it will be overwrited
 		service.addOrUpdateItem(student);

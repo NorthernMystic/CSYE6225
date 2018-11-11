@@ -33,19 +33,21 @@ public class BoardsResource {
 	@GET
 	@Path("/{boardId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Board getboard(@PathParam("boardId") long boardId) {
+	public Board getboard(@PathParam("boardId") String boardId) {
 		GenericServices service = GenericServices.getServiceInstance();
 		
-		return service.getItem(Board.class, boardId);
+		return service.getItem(Board.class, boardId, "BoardId");
 	}
 	
 	@DELETE
 	@Path("/{boardId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Board deleteboard(@PathParam("boardId") long boardId) {
+	public Board deleteboard(@PathParam("boardId") String boardId) {
 		GenericServices service = GenericServices.getServiceInstance();
 		
-		return service.deleteItem(Board.class, boardId);
+		Board board = service.getItem(Board.class, boardId, "BoardId");
+		if (board == null) return null;
+		return service.deleteItem(board);
 	}
 	
 
@@ -54,31 +56,26 @@ public class BoardsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Board addboard(Board board) {
 		GenericServices service = GenericServices.getServiceInstance();
-		if (service.getItem(Board.class, board.getId()) != null) {
-			System.out.println("the board with this id is exist");
-			return null;
-		}
 		
 		service.addOrUpdateItem(board);
 		return board;
 	}
 	
 	
-	
 	@PUT
 	@Path("/{boardId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Board updateboard(@PathParam("boardId") long boardId, 
+	public Board updateboard(@PathParam("boardId") String boardId, 
 			Board board) {
 		GenericServices service = GenericServices.getServiceInstance();
-		if (boardId != board.getId()) {
-			System.out.println("the board Id you input is different from the id in your board object");
-			return null;
-		}
-		
+
+		Board boardToRemove = service.getItem(Board.class, boardId, "boardId");
+		service.deleteItem(boardToRemove);
+
 		//if the boardId is not exist in the database, it will be created
 		//if the boardId is already existed in the database, it will be overwrited
+
 		service.addOrUpdateItem(board);
 		return board;
 	}

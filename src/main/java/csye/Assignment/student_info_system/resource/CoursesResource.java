@@ -32,19 +32,21 @@ public class CoursesResource {
 	@GET
 	@Path("/{courseId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Course getCourse(@PathParam("courseId") long courseId) {
+	public Course getCourse(@PathParam("courseId") String courseId) {
 		GenericServices service = GenericServices.getServiceInstance();
 		
-		return service.getItem(Course.class, courseId);
+		return service.getItem(Course.class, courseId, "CourseId");
 	}
 	
 	@DELETE
 	@Path("/{courseId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Course deleteCourse(@PathParam("courseId") long courseId) {
+	public Course deleteCourse(@PathParam("courseId") String courseId) {
 		GenericServices service = GenericServices.getServiceInstance();
 		
-		return service.deleteItem(Course.class, courseId);
+		Course course = service.getItem(Course.class, courseId, "CourseId");
+		if (course == null) return null;
+		return service.deleteItem(course);
 	}
 	
 
@@ -53,10 +55,6 @@ public class CoursesResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Course addCourse(Course course) {
 		GenericServices service = GenericServices.getServiceInstance();
-		if (service.getItem(Course.class, course.getId()) != null) {
-			System.out.println("the course with this id is exist");
-			return null;
-		}
 		
 		service.addOrUpdateItem(course);
 		return course;
@@ -68,18 +66,18 @@ public class CoursesResource {
 	@Path("/{courseId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Course updateCourse(@PathParam("courseId") long courseId, 
+	public Course updateCourse(@PathParam("courseId") String courseId, 
 			Course course) {
 		GenericServices service = GenericServices.getServiceInstance();
-		if (courseId != course.getId()) {
-			System.out.println("the course Id you input is different from the id in your course object");
-			return null;
-		}
-		
-		//if the CourseId is not exist in the database, it will be created
-		//if the CourseId is already existed in the database, it will be overwrited
+		Course courseToRemove = service.getItem(Course.class, courseId, "courseId");
+		service.deleteItem(courseToRemove);
+
+		//if the courseId is not exist in the database, it will be created
+		//if the courseId is already existed in the database, it will be overwrited
+
 		service.addOrUpdateItem(course);
 		return course;
+		
 	}
 	
  }
