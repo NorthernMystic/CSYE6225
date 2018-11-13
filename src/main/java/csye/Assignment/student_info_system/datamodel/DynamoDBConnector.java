@@ -2,8 +2,7 @@ package csye.Assignment.student_info_system.datamodel;
 
 
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
@@ -23,11 +22,24 @@ public class DynamoDBConnector{
 	public DynamoDBConnector() {
 		try {
 			
-			
 			//build the instance of client connect to dynamoDB 
+			//seem after set up the IAM role, we need to use InstanceProfileCredentialsProvider to replace ProfileCredentialsProvider
+			
+			//get temporary credentials, follow the temple of professor
+			
+//			InstanceProfileCredentialsProvider instanceProfileCredentialsProvider = InstanceProfileCredentialsProvider.getInstance();
+//			instanceProfileCredentialsProvider.getCredentials();
+//			
+//			dynamoDB = AmazonDynamoDBClientBuilder
+//					.standard()
+//					.withCredentials(instanceProfileCredentialsProvider)
+//					.withRegion(Regions.US_WEST_2)
+//					.build();
+			
+			//prevent leaking by set false
 			dynamoDB = AmazonDynamoDBClientBuilder
 					.standard()
-					.withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+					.withCredentials(new InstanceProfileCredentialsProvider(false))
 					.withRegion(Regions.US_WEST_2)
 					.build();
 			
