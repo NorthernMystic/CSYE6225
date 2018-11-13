@@ -12,7 +12,7 @@ The working notes will also be updated with the assignment process.
 
 The link of working notes on Assignment 1 can be found here [link](https://github.com/NorthernMystic/CSYE6225/blob/master/Assignment%20-%20Jersey%20restful%20API%20Notes.md).
 
-The link of working notes on Assignment 3 can be found here [link](https://github.com/NorthernMystic/CSYE6225/blob/master/Assignment%202%20-%20Notes.md).
+The link of working notes on Assignment 2 can be found here [link](https://github.com/NorthernMystic/CSYE6225/blob/master/Assignment%202%20-%20Notes.md).
 
 
 
