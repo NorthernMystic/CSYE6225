@@ -2,9 +2,13 @@
 
 This is a repository to provide the assignment of CSYE 6225.
 
-Currently working with the first assignment.
+Currently working with the Assignment 3.
 
 Date updated to 12.6
+
+The service has been deployed on Elasticbeanstalk: 
+
+[http://lifanstudentinformationsystem-env.jpihynhysy.us-west-2.elasticbeanstalk.com/](http://lifanstudentinformationsystem-env.jpihynhysy.us-west-2.elasticbeanstalk.com/)
 
 
 
