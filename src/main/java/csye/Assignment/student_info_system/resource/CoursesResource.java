@@ -14,9 +14,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import csye.Assignment.student_info_system.datamodel.Course;
+import csye.Assignment.student_info_system.service.CourseService;
 import csye.Assignment.student_info_system.service.GenericServices;
 
-// .. /webapi/Courses
+// .. /webapi/sourses
 @Path("courses")
 public class CoursesResource {
 		
@@ -28,7 +29,7 @@ public class CoursesResource {
 		return service.getAllItems(Course.class);
 	}
 	
-	// ... webapi/Course/1 
+	// ... webapi/courses/1 
 	@GET
 	@Path("/{courseId}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -43,9 +44,11 @@ public class CoursesResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Course deleteCourse(@PathParam("courseId") String courseId) {
 		GenericServices service = GenericServices.getServiceInstance();
+		CourseService courseService = CourseService.getServiceInstance();
 		
 		Course course = service.getItem(Course.class, courseId, "CourseId");
 		if (course == null) return null;
+		courseService.removeTopicArn(course.getTopic());
 		return service.deleteItem(course);
 	}
 	
@@ -55,7 +58,10 @@ public class CoursesResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Course addCourse(Course course) {
 		GenericServices service = GenericServices.getServiceInstance();
+		CourseService courseService = CourseService.getServiceInstance();
 		
+		String topicArn = courseService.createTopicArn(course.getCourseId().toString());
+		course.setTopic(topicArn);
 		service.addOrUpdateItem(course);
 		return course;
 	}
@@ -71,10 +77,12 @@ public class CoursesResource {
 		GenericServices service = GenericServices.getServiceInstance();
 		Course courseToRemove = service.getItem(Course.class, courseId, "courseId");
 		service.deleteItem(courseToRemove);
-
+		CourseService courseService = CourseService.getServiceInstance();
+		courseService.removeTopicArn(courseToRemove.getTopic());
+		String topicArn = courseService.createTopicArn(course.getCourseId().toString());
+		course.setTopic(topicArn);
 		//if the courseId is not exist in the database, it will be created
 		//if the courseId is already existed in the database, it will be overwrited
-
 		service.addOrUpdateItem(course);
 		return course;
 		

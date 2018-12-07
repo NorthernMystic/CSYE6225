@@ -15,15 +15,17 @@ public class Announcement extends BasicDynamoObject {
 	private String announcementId;
 	private String announcementText;
 	private String boardId;
+	private String courseId;
 	
 	public Announcement() {
 		
 	}
 	
-	public Announcement(String announcementId, String announcementText, String boardId) {
+	public Announcement(String announcementId, String announcementText, String boardId, String courseId) {
 		this.announcementId = announcementId;
 		this.announcementText = announcementText;
 		this.boardId = boardId;
+		this.courseId = courseId;
 	}
 	
 
@@ -65,4 +67,15 @@ public class Announcement extends BasicDynamoObject {
 	public void setBoardId(String boardId) {
 		this.boardId = boardId;
 	}
+
+	@DynamoDBAttribute(attributeName="CourseId")
+	public String getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(String courseId) {
+		this.courseId = courseId;
+	}
+	
+	
 }

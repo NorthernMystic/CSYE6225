@@ -2,6 +2,8 @@ package csye.Assignment.student_info_system.datamodel;
 
 
 
+//import com.amazonaws.auth.AWSStaticCredentialsProvider;
+//import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
@@ -11,8 +13,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 
 public class DynamoDBConnector{
 
-	
-	private static AmazonDynamoDB dynamoDB;
+	private static AmazonDynamoDB dynamoDB = null;
 	
 	//singleton
 	private static DynamoDBConnector dynamoInstance = null;
@@ -44,13 +45,21 @@ public class DynamoDBConnector{
 					.build();
 			
 			mapper = new DynamoDBMapper(dynamoDB);
+
 			
-			//test with local dynamodb
-//			dynamoDB = AmazonDynamoDBClientBuilder.standard().withEndpointConfiguration(
-//		            // test with localhost
-//		            new AwsClientBuilder.EndpointConfiguration("http://localhost:8000", "us-west-2"))
-//		            .build();
 			
+			//------------------------------------------
+			//use for local test
+//			String key = localTestKeyPassWord.ACCES_KEY_ID;
+//			String password = localTestKeyPassWord.SECRET_ACCESS_KEY;
+//			BasicAWSCredentials awsCreds = new BasicAWSCredentials(key
+//					, password);
+//			dynamoDB = AmazonDynamoDBClientBuilder
+//					.standard()
+//					.withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+//					.withRegion(Regions.US_WEST_2)
+//					.build();
+//			mapper = new DynamoDBMapper(dynamoDB);
 			
 		} catch(Exception e) {
 			System.out.println("The DynamoDB connect client initialization failed");
@@ -71,5 +80,8 @@ public class DynamoDBConnector{
 		return mapper;
 	}
 	
-	
+	public static AmazonDynamoDB getClient() {
+		if (dynamoDB == null) dynamoInstance = new DynamoDBConnector();
+		return dynamoDB;
+	}
 }

@@ -32,7 +32,7 @@ public class AnnouncementService{
 		eav.put(":v2",  new AttributeValue().withS(announcementId));
 
 		DynamoDBQueryExpression<Announcement> queryExpression = new DynamoDBQueryExpression<Announcement>()
-		    .withIndexName("Board-Announcement-Index")
+		    .withIndexName("BoardId-AnnouncementId-Index")
 		    .withConsistentRead(false)
 		    .withKeyConditionExpression("BoardId = :v1 and begins_with(AnnouncementId, :v2)")
 		    .withExpressionAttributeValues(eav);

@@ -35,7 +35,7 @@ public class GenericServices{
 	
 	public <T extends BasicDynamoObject> T getItem(Class<T> objectClass, String objectId, String indexName) {
 		HashMap<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-		eav.put(":v1",  new AttributeValue().withN(objectId));
+		eav.put(":v1",  new AttributeValue().withS(objectId));
 		
 		DynamoDBQueryExpression<T> queryExpression = new DynamoDBQueryExpression<T>()
 			    .withIndexName(indexName)

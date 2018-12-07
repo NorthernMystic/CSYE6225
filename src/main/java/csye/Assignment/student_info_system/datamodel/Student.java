@@ -12,24 +12,26 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 @DynamoDBTable(tableName = "Students")
 public class Student extends BasicDynamoObject {
 	private String id;
-	private Long studentId;
+	private String studentId;
 	private String firstName;
 	private String lastName;
 	private String joinDate;
 	private String department;
 	private List<String> enrolledClass;
+	private String email;
 	
 	public Student() {
 		
 	}
 	
-	public Student(String firstName, String lastName, Long studentId, String joinDate, String department, List<String> enrolledClass) {
+	public Student(String firstName, String lastName, String studentId, String joinDate, String department, List<String> enrolledClass, String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.studentId = studentId;
 		this.joinDate = joinDate;
 		this.department = department;
 		this.enrolledClass = enrolledClass;
+		this.email = email;
 	}
 	
 	@DynamoDBAttribute(attributeName = "StudentFirstName")
@@ -78,7 +80,7 @@ public class Student extends BasicDynamoObject {
 		this.department = department;
 	}
 
-	@DynamoDBAttribute(attributeName = "EnrolledCourses")
+	@DynamoDBAttribute(attributeName = "EnrolledClasses")
 	public List<String> getEnrolledClass() {
 		return enrolledClass;
 	}
@@ -88,13 +90,22 @@ public class Student extends BasicDynamoObject {
 	}
 	
 	@DynamoDBIndexHashKey(attributeName="StudentId", globalSecondaryIndexName = "StudentId")
-	public long getStudentId() {
+	public String getStudentId() {
 		return studentId;
 	}
 
-
-	public void setStudentId(long studentId) {
+	public void setStudentId(String studentId) {
 		this.studentId = studentId;
 	}
+	
+	@DynamoDBAttribute(attributeName = "Email")
+	public String getEmail() {
+		return email;
+	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	
 }

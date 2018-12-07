@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import csye.Assignment.student_info_system.datamodel.Student;
 import csye.Assignment.student_info_system.service.GenericServices;
+import csye.Assignment.student_info_system.service.RegisterService;
 
 // .. /webapi/students
 // webapi is defined in the src/main/webapp/web-inf/web.xml -> url pattern
@@ -44,8 +45,16 @@ public class StudentsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Student deleteStudent(@PathParam("studentId") String studentId) {
 		GenericServices service = GenericServices.getServiceInstance();
+		RegisterService serviceR = RegisterService.getServiceInstance();
 		Student student = service.getItem(Student.class, studentId, "StudentId");
 		if (student == null) return null;
+		
+		for (String courseId: student.getEnrolledClass()) {
+			if (student.getEmail() != null) {
+				serviceR.subscribeTopic("arn:aws:sns:us-west-2:474694586562:" + courseId, student.getEmail());
+			}
+		}
+		
 		return service.deleteItem(student);
 	}
 	
@@ -71,10 +80,30 @@ public class StudentsResource {
 		GenericServices service = GenericServices.getServiceInstance();
 		Student studentToRemove = service.getItem(Student.class, studentId, "StudentId");
 		service.deleteItem(studentToRemove);
+		RegisterService serviceR = RegisterService.getServiceInstance();
+		for (String courseId: student.getEnrolledClass()) {
+			if (student.getEmail() != null) {
+				serviceR.subscribeTopic("arn:aws:sns:us-west-2:474694586562:" + courseId, student.getEmail());
+			}
+		}
 		//if the studentId is not exist in the database, it will be created
 		//if the studentId is already existed in the database, it will be overwrited
 		service.addOrUpdateItem(student);
 		return student;
 	}
 	
+	
+	//The register method
+	@POST
+	@Path("/{studentId}/register")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String updatestudent(@PathParam("studentId") String studentId, 
+			String courseId) {
+		RegisterService service = RegisterService.getServiceInstance();
+		Boolean isRegistered = service.register(studentId, courseId);
+		
+		if (isRegistered) return "Registration success";
+		return "Registration failed";
+	}
  }

@@ -12,18 +12,27 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 @DynamoDBTable(tableName = "Courses")
 public class Course extends BasicDynamoObject {
 	private String id;
-	private Long courseId;
+	private String courseId;
 	private Long professorId;
 	private Long TAId;
 	private String department;
 	private Long boardId;
-	private List<Long> roster;
+	private List<String> roster;
+	private String topic;
+
+	public String getTopic() {
+		return topic;
+	}
+
+	public void setTopic(String topic) {
+		this.topic = topic;
+	}
 
 	public Course() {
 		
 	}
 	
-	public Course(Long courseId, Long professorId, Long TAId, String department, Long boardId, List<Long> roster) {
+	public Course(String courseId, Long professorId, Long TAId, String department, Long boardId, List<String> roster) {
 		this.courseId = courseId;
 		this.professorId = professorId;
 		this.TAId = TAId;
@@ -44,11 +53,11 @@ public class Course extends BasicDynamoObject {
 
 	@DynamoDBAttribute(attributeName="CourseId") 
 	@DynamoDBIndexHashKey(attributeName="CourseId", globalSecondaryIndexName = "CourseId")
-	public Long getCourseId() {
+	public String getCourseId() {
 		return courseId;
 	}
 
-	public void setCourseId(Long courseId) {
+	public void setCourseId(String courseId) {
 		this.courseId = courseId;
 	}
 	
@@ -66,8 +75,8 @@ public class Course extends BasicDynamoObject {
 		return TAId;
 	}
 
-	public void setTAId(Long tAId) {
-		TAId = tAId;
+	public void setTAId(Long TaId) {
+		TAId = TaId;
 	}
 	
 	@DynamoDBAttribute(attributeName="Department")
@@ -89,15 +98,12 @@ public class Course extends BasicDynamoObject {
 	}
 
 	@DynamoDBAttribute(attributeName="Roster")
-	public List<Long> getRoster() {
+	public List<String> getRoster() {
 		return roster;
 	}
 
-	public void setRoster(List<Long> roster) {
+	@DynamoDBAttribute(attributeName="Topic")
+	public void setRoster(List<String> roster) {
 		this.roster = roster;
-	}
-
-	public Long getObjectId() {
-		return courseId;
 	}
 }
