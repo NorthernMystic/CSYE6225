@@ -64,7 +64,7 @@ public class RegisterService{
 	            .withReturnValues(ReturnValue.UPDATED_NEW);
 		tableC.updateItem(updateItemSpec);
 		
-		subscribeTopic(course.getTopic(), student.getEmail());
+		subscribeTopic(course.getNotificationTopic(), student.getEmail());
 		return true;
 	}
 	

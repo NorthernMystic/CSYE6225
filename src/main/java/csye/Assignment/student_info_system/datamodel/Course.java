@@ -1,5 +1,6 @@
 package csye.Assignment.student_info_system.datamodel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
@@ -13,32 +14,24 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 public class Course extends BasicDynamoObject {
 	private String id;
 	private String courseId;
-	private Long professorId;
-	private Long TAId;
+	private String professorId;
+	private String taId;
 	private String department;
-	private Long boardId;
+	
+	private String boardId;
 	private List<String> roster;
-	private String topic;
-
-	public String getTopic() {
-		return topic;
-	}
-
-	public void setTopic(String topic) {
-		this.topic = topic;
-	}
+	private String notificationTopic;
 
 	public Course() {
 		
 	}
 	
-	public Course(String courseId, Long professorId, Long TAId, String department, Long boardId, List<String> roster) {
+	public Course(String courseId, String professorId, String taId, String department) {
 		this.courseId = courseId;
 		this.professorId = professorId;
-		this.TAId = TAId;
+		this.taId = taId;
 		this.department = department;
-		this.boardId = boardId;
-		this.roster = roster;
+		this.roster = new ArrayList<>();
 	}
 	
 	@DynamoDBHashKey(attributeName = "Id")
@@ -62,21 +55,21 @@ public class Course extends BasicDynamoObject {
 	}
 	
 	@DynamoDBAttribute(attributeName="ProfessorId")
-	public Long getProfessorId() {
+	public String getProfessorId() {
 		return professorId;
 	}
 
-	public void setProfessorId(Long professorId) {
+	public void setProfessorId(String professorId) {
 		this.professorId = professorId;
 	}
 
 	@DynamoDBAttribute(attributeName="TAId")
-	public Long getTAId() {
-		return TAId;
+	public String getTAId() {
+		return taId;
 	}
 
-	public void setTAId(Long TaId) {
-		TAId = TaId;
+	public void setTAId(String taId) {
+		this.taId = taId;
 	}
 	
 	@DynamoDBAttribute(attributeName="Department")
@@ -89,11 +82,11 @@ public class Course extends BasicDynamoObject {
 	}
 
 	@DynamoDBAttribute(attributeName="BoardId")
-	public Long getBoard() {
+	public String getBoard() {
 		return boardId;
 	}
 
-	public void setBoard(Long boardId) {
+	public void setBoard(String boardId) {
 		this.boardId = boardId;
 	}
 
@@ -102,8 +95,18 @@ public class Course extends BasicDynamoObject {
 		return roster;
 	}
 
-	@DynamoDBAttribute(attributeName="Topic")
 	public void setRoster(List<String> roster) {
 		this.roster = roster;
 	}
+
+	@DynamoDBAttribute(attributeName="Topic")
+	public String getNotificationTopic() {
+		return notificationTopic;
+	}
+
+	public void setNotificationTopic(String notificationTopic) {
+		this.notificationTopic = notificationTopic;
+	}
+	
+	
 }

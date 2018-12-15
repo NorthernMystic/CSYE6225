@@ -11,13 +11,13 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 public class Board extends BasicDynamoObject {
 
 	private String id;
-	private Long courseId;
+	private String courseId;
 	
 	public Board() {
 		
 	}
 	
-	public Board(Long courseId) {
+	public Board(String courseId) {
 		this.courseId = courseId;
 	}
 	
@@ -35,11 +35,11 @@ public class Board extends BasicDynamoObject {
 
 	@DynamoDBAttribute(attributeName="CourseId") 
 	@DynamoDBIndexHashKey(attributeName="CourseId", globalSecondaryIndexName = "CourseIdInBorad")
-	public Long getCourseId() {
+	public String getCourseId() {
 		return courseId;
 	}
 
-	public void setCourseId(Long courseId) {
+	public void setCourseId(String courseId) {
 		this.courseId = courseId;
 	}
 	

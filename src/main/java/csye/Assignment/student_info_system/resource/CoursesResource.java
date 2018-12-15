@@ -48,7 +48,7 @@ public class CoursesResource {
 		
 		Course course = service.getItem(Course.class, courseId, "CourseId");
 		if (course == null) return null;
-		courseService.removeTopicArn(course.getTopic());
+		courseService.removeTopicArn(course.getNotificationTopic());
 		return service.deleteItem(course);
 	}
 	
@@ -61,7 +61,7 @@ public class CoursesResource {
 		CourseService courseService = CourseService.getServiceInstance();
 		
 		String topicArn = courseService.createTopicArn(course.getCourseId().toString());
-		course.setTopic(topicArn);
+		course.setNotificationTopic(topicArn);
 		service.addOrUpdateItem(course);
 		return course;
 	}
@@ -78,9 +78,9 @@ public class CoursesResource {
 		Course courseToRemove = service.getItem(Course.class, courseId, "courseId");
 		service.deleteItem(courseToRemove);
 		CourseService courseService = CourseService.getServiceInstance();
-		courseService.removeTopicArn(courseToRemove.getTopic());
+		courseService.removeTopicArn(courseToRemove.getNotificationTopic());
 		String topicArn = courseService.createTopicArn(course.getCourseId().toString());
-		course.setTopic(topicArn);
+		course.setNotificationTopic(topicArn);
 		//if the courseId is not exist in the database, it will be created
 		//if the courseId is already existed in the database, it will be overwrited
 		service.addOrUpdateItem(course);
