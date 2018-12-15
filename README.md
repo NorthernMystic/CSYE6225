@@ -20,6 +20,8 @@ The link of working notes on Assignment 2 can be found here [link](https://githu
 
 The link of working notes on Assignment 3 can be found here [link](https://github.com/NorthernMystic/CSYE6225/blob/master/Assignment%203%20Notes.md).
 
+The link of working notes on Assignment 4 can be found here [link](https://github.com/NorthernMystic/CSYE6225/blob/master/Assignment%204%20Notes.md).
+
 ---
 
 ###Test
